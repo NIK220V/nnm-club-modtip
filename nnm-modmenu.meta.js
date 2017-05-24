@@ -6,9 +6,10 @@
 // @author       NIK220V
 // @match        http://nnmclub.to/forum/viewforum.php?f=*
 // @match        https://nnmclub.to/forum/viewforum.php?f=*
+// @match        http://*.nnmclub.to/forum/viewforum.php?f=*
+// @match        https://*.nnmclub.to/forum/viewforum.php?f=*
 // @homepage     https://github.com/NIK220V/nnm-club-modtip
 // @updateURL    https://github.com/NIK220V/nnm-club-modtip/raw/master/nnm-modmenu.meta.js
 // @downloadURL  https://github.com/NIK220V/nnm-club-modtip/raw/master/nnm-modmenu.user.js
-// @run-at       document-start
 // @grant        none
 // ==/UserScript==
