@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NNM ModMenu Tip
 // @namespace    none
-// @version      0.01
+// @version      0.02
 // @description  Скрипт, который будет показывать удобную менюшку при наведении на название темы в форумах, которые вы модерируете.
 // @author       NIK220V
 // @match        http://nnmclub.to/forum/viewforum.php?f=*
