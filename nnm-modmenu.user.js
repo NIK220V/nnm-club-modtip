@@ -61,7 +61,7 @@ var sid = document.querySelectorAll('.mainmenu')[12].href.substring(document.que
 
 var css = document.createElement('style');
 css.id = 'nnmtipcss';
-css.innerText = '.topictitle:hover .nnmtip{display:block}.nnmtip{display:none;background:#e8eff7;margin-left:15px;margin-top:5px;padding:6px;position:absolute;z-index:1000;width:155px;height:19px;border:1px solid #aec9e4;border-radius:15px;opacity:0.75} .topicpremod:hover .nnmtip{display:block}.nnmtip{display:none;background:#e8eff7;margin-left:15px;margin-top:5px;padding:6px;position:absolute;z-index:1000;width:155px;height:19px;border:1px solid #aec9e4;border-radius:15px;opacity:0.75}'+
+css.innerText = '.topictitle:hover .nnmtip{display:block} .topicpremod:hover .nnmtip{display:block} .nnmtip{display:none;background:#e8eff7;margin-left:15px;margin-top:5px;padding:6px;position:absolute;z-index:1000;width:155px;height:19px;border:1px solid #aec9e4;border-radius:15px;opacity:0.75}'+
     ".image_rename{display:inline-block;background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAASCAYAAAC5DOVpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDoAABSCAABFVgAADqXAAAXb9daH5AAAAKvSURBVHjalJRPSFRRFMZ/b3rk2ItpynGwf6YZmEVWFGNEJOUiEqGVmxb9XQRCuwJt1yqCcFEQuOifEIHuIyGpNJCC0lzUSOrozJg5ozUzzsyb994Mp4X5GnWM+uAs7j33+/jOOfdeRURYjmhCl8d9wzx68wl/ZN7eP7yjlGZfNS0NtWjFxcoKoogsibauPtl05a60dfXJ4MS0JNNpO/r9IcnPL+cq+c6udvZKYDrK/UunKFnvJGdZFELMyNHysIfKzaXcO9dgO7TFrnb2SiwW41HLGQzLImdZuFyugmKJRALTNLnw4OVSQRGh651faq51SDKdlng8LvF4XIBVY/FMKBSSmmsd0u8PiYjgAHjyapCbzfUFe2n9LjW/Ny6XC9M0cTqdXKzfT0fPOwAc0YQuA4EojfvK7R6Zpsm/4nSFxvPP30jpujhe+4M07tliJ03TxOPxrCBls9lVBau8GxgMzqFORGK43W5ylvXPjsbGxigqKrLXXm0tA1+nFnqWX9pyV6qq/lU4lU4DUOF146jwuglMR/kfLLoyDAOA8dkEmzdoOBr3lTMQiJLJZMhkMqsK5Ds0DAPDMNB1ncjMDP7IPEeqynBoxcXK2aN7eDY0hWEYhMNhwuEwiqLYAaxYA0SiUboCJq1NPlRVVVSAy/V7abjVzXFvHZ6SEgBGR0cLOtR1HYDZuTlGv//k6YcJJu6cXLhnAAd2lCmtTT4udg8xGQzahNUwGQzyaSxM25spbjcfo7x0o7LkbQLc6O6Xjt4hbtVvZVfZRjRNQ1u3zp5aKpUilUwyPJ2g/eMPWpt8XG+qW/nQF9H9fkTaX3wgPp/k0PYSdjv/DGXg5xrGZxPs9Lg4f+Igzb7qJX+aUuhzBHg7EpbnwwFefQmRy2ZZo6qcqNlOY20lx6q3KYU4vwYAJZiGjrIzMuIAAAAASUVORK5CYII=');width:19px;height:18px;}";
 document.head.appendChild(css);
 var topics = (document.location.href.indexOf('tracker.php') < 0) ?  document.querySelectorAll('h2[class~="topictitle"]') : ([].slice.call(document.querySelectorAll('a[class~="topictitle"]')).concat([].slice.call(document.querySelectorAll('a[class~="topicpremod"]'))));
@@ -73,7 +73,6 @@ window.rename = function(topic){
     var text = topic.children[0].innerText;
     topic.children[0].innerText = '';
     topic.children[1].remove();
-    console.log(topic);
     var topicid = (topic.tagName == 'A') ? topic.href.substring(topic.href.indexOf('=')+1) : topic.children[0].href.substring(topic.children[0].href.indexOf('=')+1);
     if (topic.tagName == 'A') topic.href = 'javascript:;';
     var xhr = new XMLHttpRequest();
@@ -82,8 +81,8 @@ window.rename = function(topic){
             var textarea = document.createElement('textarea');
             textarea.value = text;
             textarea.className = 'topicpremod';
-            var p = new DOMParser();
-			var doc = p.parseFromString(xhr.responseText, "text/html");
+            var doc = document.createElement('div');
+            doc.innerHTML = xhr.responseText;
             textarea.rtopicid = topicid;
             textarea.topicid = doc.querySelector('.name').children[0].name;
             textarea.maxlength = 200;
@@ -112,8 +111,8 @@ function renamer(textarea){
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE){
-            var p = new DOMParser();
-			var doc = p.parseFromString(xhr.responseText, "text/html");
+            var doc = document.createElement('div');
+            doc.innerHTML = xhr.responseText;
             var form = doc.querySelector('form[action="posting.php"]');
             var c1 = [].slice.call(doc.querySelectorAll('input')), c2 = [].slice.call(doc.querySelectorAll('textarea')), c3 = [].slice.call(doc.querySelectorAll('select')), inputs = c1.concat(c2).concat(c3);
             for (var i = inputs.length; i--;){
@@ -128,6 +127,8 @@ function renamer(textarea){
             iframe.onload = function(){
                 textarea.parentNode.children[0].innerText = newname;
                 if (textarea.parentNode.tagName == 'A') textarea.parentNode.href = 'viewtopic.php?t='+textarea.rtopicid;
+                console.log(textarea.parentNode.onmouseover);
+                textarea.parentNode.onmouseover = function(){showInfo(this);};
                 textarea.remove();
                 renamer.remove();
                 iframe.remove();
