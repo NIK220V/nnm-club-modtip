@@ -171,8 +171,6 @@ window.transferTopic = function(elem) {
     var indexofnonnumber = (match === null) ? uri.length : match.index;
     var fromid = uri.substring(indexofe, indexofnonnumber+indexofe);
     var data = moveval.replaceAll('%reason%', encodeString('Удаление темы')).replaceAll('%forumto%', garbageid).replaceAll('%forumfrom%', fromid).replaceAll('%topicid%', topicid).replaceAll('%sid%', sid).replaceAll('%confirm%', encodeString('Да'));
-    console.log(data);
-    return;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE){
