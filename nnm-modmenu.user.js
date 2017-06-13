@@ -200,22 +200,32 @@ window.ToggleTopic = function(id, fid){
 };
 
 window.openTMove = function(){
+    var id = 0;
     for (var key in SelectedTopics){
-        if (document.getElementById('nnmsearchmover'+key)) document.getElementById('nnmsearchmover'+key).remove();
-        var form = document.createElement('form');
-        form.id = 'nnmsearchmover'+key;
-        form.style.display='none';
-        form.target='_blank';
-        form.method='POST';
-        form.action='modcp.php';
-        form.innerHTML = '<input type="hidden" name="sid" value="'+sid+'"><input type="hidden" name="move" value="Переместить"><input type="hidden" name="f" value="'+key+'">';
-        for (var i = SelectedTopics[key].length; i--;) form.innerHTML+='<input type="hidden" name="topic_id_list[]" value="'+SelectedTopics[key][i]+'">';
-        document.body.appendChild(form);
-        form.submit();
+        id++;
+        openTmovefr(key, id);
     }
-    var v = document.querySelectorAll('input[name*="disabledinput"]');
-    for (var i = v.length; i--;) if (v[i].checked) v[i].click();
+    setTimeout(function(){
+     var v = document.querySelectorAll('input[name*="disabledinput"]');
+        for (var i = v.length; i--;) if (v[i].checked) v[i].click();
+    }, (id+1)*2500);
 };
+
+function openTmovefr(key, id){
+   setTimeout(function(){
+       if (document.getElementById('nnmsearchmover'+key)) document.getElementById('nnmsearchmover'+key).remove();
+       var form = document.createElement('form');
+       form.id = 'nnmsearchmover'+key;
+       form.style.display='none';
+       form.target='_blank';
+       form.method='POST';
+       form.action='modcp.php';
+       form.innerHTML = '<input type="hidden" name="sid" value="'+sid+'"><input type="hidden" name="move" value="Переместить"><input type="hidden" name="f" value="'+key+'">';
+       for (var i = SelectedTopics[key].length; i--;) form.innerHTML+='<input type="hidden" name="topic_id_list[]" value="'+SelectedTopics[key][i]+'">';
+       document.body.appendChild(form);
+       form.submit();
+   }, id*2500);
+}
 
 if (document.location.href.indexOf('tracker.php')>=0){
     document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><button onclick="trackerMove();this.parentNode.remove();return false;" class="liteoption">Масс. перенос</button></span>';
