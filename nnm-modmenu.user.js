@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NNM ModMenu Tip
 // @namespace    none
-// @version      0.03
+// @version      0.04
 // @description  Скрипт, который будет показывать удобную менюшку при наведении на название темы в форумах, которые вы модерируете.
 // @author       NIK220V
 // @match        *://*.nnmclub.to/forum/viewforum.php?f=*
@@ -18,7 +18,18 @@
 // @grant        none
 // ==/UserScript==
 
-if (document.querySelector('.menutable').innerText.indexOf('Вход') > 0 || (document.body.innerText.indexOf('Вы можете модерировать этот форум') < 0 && document.location.href.indexOf('tracker.php') < 0)) return;
+if (document.querySelector('.menutable').innerText.indexOf('Вход') >= 0 || (document.body.innerText.indexOf('Вы можете модерировать этот форум') < 0 && document.location.href.indexOf('tracker.php') < 0)) return;
+
+if (localStorage.getItem("NNMModMenu.ModF") === null) localStorage.setItem("NNMModMenu.ModF", -1);
+
+window.ModF = localStorage.getItem("NNMModMenu.ModF");
+
+if (ModF < 0){
+if (location.href.indexOf('?f=')>=0){
+    ModF = location.href.substring(location.href.indexOf('=')+1);
+    localStorage.setItem("NNMModMenu.ModF", ModF);
+}
+}
 
 // Potential usage - onclick="transferTopic(this.parentNode.parentNode.parentNode);"
 var defval = '<span class="gensmall"><a href="modcp.php?t=%topicid%&mode=delete&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_delete.gif" alt="Удалить тему" title="Удалить тему" border="0"></a>&nbsp;<a href="modcp.php?t=%topicid%&mode=move&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_move.gif" alt="Перенести тему" title="Перенести тему" border="0"></a>&nbsp;%closeoropen%<a href="modcp.php?t=%topicid%&mode=split&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_split.gif" alt="Разделить тему" title="Разделить тему" border="0"></a>&nbsp;<a href="merge.php?t=%topicid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_merge.gif" alt="Склейка тем" title="Склейка тем" border="0"></a>&nbsp;<a href="modcp.php?t=%topicid%&mode=unset_download&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_normal.gif" alt="Not Download" title="Not Download" border="0"></a>&nbsp;<a href="javascript:;" class="image_rename" onclick="rename(this.parentNode.parentNode.parentNode.parentNode);" title="Переименовать тему\n(С этой страницы)"></a></span>';
@@ -30,11 +41,25 @@ function url(){
  return (document.location.href.indexOf('http:') < 0) ? '-ssl' : '';
 }
 
+window.SelectedTopics = [];
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     while (target.indexOf(search) > 0)
         target = target.replace(search, replacement);
     return target;
+};
+Array.prototype.remove = function() {
+    var what, a = arguments,
+        L = a.length,
+        ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
 };
 
 var sid = document.querySelectorAll('.mainmenu')[12].href.substring(document.querySelectorAll('.mainmenu')[12].href.indexOf('&sid=')+5);
@@ -135,4 +160,60 @@ function showInfo(elem){
     tip.style.top = '-105%';
     tipparent.appendChild(tip);
     elem.appendChild(tipparent);
+}
+
+window.trackerMove = function(){
+    var p = document.querySelector('.forumline.tablesorter').children[0].children[0];
+    var e = document.createElement('th');
+    e.style.align = 'center';
+    e.style.nowrap = 'nowrap';
+    e.title = 'Перенос';
+    e.innerHTML = '<b class="tbs-text">Move</b><span class="tbs-icon">&nbsp;&nbsp;</span>';
+    p.appendChild(e);
+    var c = document.querySelector('.forumline.tablesorter').children[1].children;
+for (var i = c.length;i--;){
+    var td = document.createElement('td');
+    td.align = 'center';
+    td.style.nowrap = 'nowrap';
+    td.title = 'Перенос';
+    td.className = 'gensmall';
+    td.innerHTML = '<input type="checkbox" name="disabledinput'+i+'" onclick="ToggleTopic(IdFromHref(this.parentNode.parentNode.children[2].children[0].href));">';
+    c[i].appendChild(td);
+}
+};
+
+window.IdFromHref = function(href){
+    return href.substring(href.indexOf('=')+1);
+};
+
+window.ToggleTopic = function(id){
+    if (SelectedTopics.indexOf(id) >= 0)
+        SelectedTopics.remove(id);
+    else
+        SelectedTopics.push(id);
+    if (SelectedTopics.length > 0){
+        if (!document.getElementById('nnmsearchmoverbtn')){
+            document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><button id="nnmsearchmoverbtn" onclick="openTMove();this.parentNode.remove();return false;" class="liteoption">Открыть перенос</button></span>';
+        }
+    } else {
+        if (document.getElementById('nnmsearchmoverbtn')) document.getElementById('nnmsearchmoverbtn').remove();
+    }
+};
+
+window.openTMove = function(){
+    if (document.getElementById('nnmsearchmover')) document.getElementById('nnmsearchmover').remove();
+    var form = document.createElement('form');
+    form.id = 'nnmsearchmover';
+    form.style.display='none';
+    form.target='_blank';
+    form.method='POST';
+    form.action='modcp.php';
+    form.innerHTML = '<input type="hidden" name="sid" value="'+sid+'"><input type="hidden" name="move" value="Переместить"><input type="hidden" name="f" value="'+ModF+'">';
+    for (var i = SelectedTopics.length; i--;) form.innerHTML+='<input type="hidden" name="topic_id_list[]" value="'+SelectedTopics[i]+'">';
+    document.body.appendChild(form);
+    form.submit();
+};
+
+if (document.location.href.indexOf('tracker.php')>=0 && ModF >= 0){
+    document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><button onclick="trackerMove();this.parentNode.remove();return false;" class="liteoption">Масс. перенос</button></span>';
 }
