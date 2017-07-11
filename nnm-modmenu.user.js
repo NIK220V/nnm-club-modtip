@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NNM ModMenu Tip
 // @namespace    none
-// @version      0.04
+// @version      0.05
 // @description  Пак полезных функций.
 // @author       NIK220V
 // @match        *://*.nnmclub.to/forum/viewforum.php?f=*
@@ -22,7 +22,6 @@
 
 if (document.querySelector('.menutable').innerText.indexOf('Вход') >= 0 || (document.body.innerText.indexOf('Вы можете модерировать этот форум') < 0 && document.location.href.indexOf('tracker.php') < 0)) return;
 
-// Potential usage - onclick="transferTopic(this.parentNode.parentNode.parentNode);"
 var defval = '<span class="gensmall"><a href="modcp.php?t=%topicid%&mode=delete&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_delete.gif" alt="Удалить тему" title="Удалить тему" border="0"></a>&nbsp;<a href="modcp.php?t=%topicid%&mode=move&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_move.gif" alt="Перенести тему" title="Перенести тему" border="0"></a>&nbsp;%closeoropen%<a href="modcp.php?t=%topicid%&mode=split&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_split.gif" alt="Разделить тему" title="Разделить тему" border="0"></a>&nbsp;<a href="merge.php?t=%topicid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_merge.gif" alt="Склейка тем" title="Склейка тем" border="0"></a>&nbsp;<a href="modcp.php?t=%topicid%&mode=unset_download&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_normal.gif" alt="Not Download" title="Not Download" border="0"></a>&nbsp;<a href="javascript:;" class="image_rename" onclick="rename(this.parentNode.parentNode.parentNode.parentNode);" title="Переименовать тему\n(С этой страницы)"></a></span>';
 
 var openval = '<a href="modcp.php?t=%topicid%&mode=unlock&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_unlock.gif" alt="Вновь открыть тему" title="Вновь открыть тему" border="0"></a>&nbsp;';
@@ -161,6 +160,7 @@ window.trackerMove = function(){
     e.title = 'Перенос';
     e.innerHTML = '<b class="tbs-text">Move</b><span class="tbs-icon">&nbsp;&nbsp;</span>';
     p.appendChild(e);
+    document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><button id="nnmsearchselectbtn" onclick="selectAll();return false;" class="liteoption">Отметить всё</button></span><span class="genmed"><button id="nnmsearchdeselectbtn" onclick="deselectAll();return false;" class="liteoption">Снять выделение</button></span>';
     var c = document.querySelector('.forumline.tablesorter').children[1].children;
 for (var i = c.length;i--;){
     var td = document.createElement('td');
@@ -202,13 +202,27 @@ window.ToggleTopic = function(id, fid){
 window.openTMove = function(){
     var id = 0;
     for (var key in SelectedTopics){
-        id++;
         openTmovefr(key, id);
+        id++;
     }
     setTimeout(function(){
      var v = document.querySelectorAll('input[name*="disabledinput"]');
         for (var i = v.length; i--;) if (v[i].checked) v[i].click();
     }, (id+1)*2500);
+};
+
+window.selectAll = function(){
+    var a = document.querySelectorAll('input[name*="disabledinput"]');
+    for (var i = a.length; i--;){
+    if (!a[i].checked) a[i].click();
+    }
+};
+
+window.deselectAll = function(){
+    var a = document.querySelectorAll('input[name*="disabledinput"]');
+    for (var i = a.length; i--;){
+    if (a[i].checked) a[i].click();
+    }
 };
 
 function openTmovefr(key, id){
@@ -228,5 +242,5 @@ function openTmovefr(key, id){
 }
 
 if (document.location.href.indexOf('tracker.php')>=0){
-    document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><button onclick="trackerMove();this.parentNode.remove();return false;" class="liteoption">Масс. перенос</button></span>';
+    document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><button onclick="this.parentNode.remove();trackerMove();return false;" class="liteoption">Масс. перенос</button></span>';
 }
