@@ -1,15 +1,19 @@
 // ==UserScript==
 // @name         NNM ModMenu Tip
 // @namespace    none
-// @version      0.05
+// @version      0.06
 // @description  Пак полезных функций.
 // @author       NIK220V
 // @match        *://*.nnmclub.to/forum/viewforum.php?f=*
+// @match        *://*.nnmclub.tv/forum/viewforum.php?f=*
+// @match        *://*.nnm-club.lib/forum/viewforum.php?f=*
 // @match        *://*.nnm-club.me/forum/viewforum.php?f=*
 // @match        *://*.nnm-club.name/forum/viewforum.php?f=*
 // @match        *://*.nnm-club.i2p.onion/forum/viewforum.php?f=*
 // @match        *://*.nnmclub5toro7u65.onion/forum/viewforum.php?f=*
 // @match        *://*.nnmclub.to/forum/tracker.php*
+// @match        *://*.nnmclub.tv/forum/tracker.php*
+// @match        *://*.nnm-club.lib/forum/tracker.php*
 // @match        *://*.nnm-club.name/forum/tracker.php*
 // @match        *://*.nnm-club.me/forum/tracker.php*
 // @match        *://*.nnm-club.i2p.onion/forum/tracker.php*
