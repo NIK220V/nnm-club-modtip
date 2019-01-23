@@ -1,15 +1,19 @@
 // ==UserScript==
 // @name         NNM ModMenu Tip
 // @namespace    none
-// @version      0.05
+// @version      0.06
 // @description  Пак полезных функций.
 // @author       NIK220V
 // @match        *://*.nnmclub.to/forum/viewforum.php?f=*
+// @match        *://*.nnmclub.tv/forum/viewforum.php?f=*
+// @match        *://*.nnm-club.lib/forum/viewforum.php?f=*
 // @match        *://*.nnm-club.me/forum/viewforum.php?f=*
 // @match        *://*.nnm-club.name/forum/viewforum.php?f=*
 // @match        *://*.nnm-club.i2p.onion/forum/viewforum.php?f=*
 // @match        *://*.nnmclub5toro7u65.onion/forum/viewforum.php?f=*
 // @match        *://*.nnmclub.to/forum/tracker.php*
+// @match        *://*.nnmclub.tv/forum/tracker.php*
+// @match        *://*.nnm-club.lib/forum/tracker.php*
 // @match        *://*.nnm-club.name/forum/tracker.php*
 // @match        *://*.nnm-club.me/forum/tracker.php*
 // @match        *://*.nnm-club.i2p.onion/forum/tracker.php*
@@ -185,11 +189,12 @@ window.FIDFromHref = function(href){
 };
 
 window.ToggleTopic = function(id, fid){
-    if (!SelectedTopics[fid]) SelectedTopics[fid] = [];
+    if (fid in SelectedTopics === false) SelectedTopics[fid] = [];
     if (SelectedTopics[fid].indexOf(id) >= 0)
         SelectedTopics[fid].remove(id);
     else
         SelectedTopics[fid].push(id);
+    if (Object.keys(SelectedTopics[fid]).length < 1) delete SelectedTopics[fid];
     if (Object.keys(SelectedTopics).length > 0){
         if (!document.getElementById('nnmsearchmoverbtn')){
             document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><button id="nnmsearchmoverbtn" onclick="openTMove();this.parentNode.remove();return false;" class="liteoption">Открыть перенос</button></span>';
@@ -202,13 +207,13 @@ window.ToggleTopic = function(id, fid){
 window.openTMove = function(){
     var id = 0;
     for (var key in SelectedTopics){
-        openTmovefr(key, id);
+        openTmovefr(key, SelectedTopics[key].slice(), id);
         id++;
     }
     setTimeout(function(){
      var v = document.querySelectorAll('input[name*="disabledinput"]');
         for (var i = v.length; i--;) if (v[i].checked) v[i].click();
-    }, (id+1)*2500);
+    }, 500);
 };
 
 window.selectAll = function(){
@@ -225,7 +230,7 @@ window.deselectAll = function(){
     }
 };
 
-function openTmovefr(key, id){
+function openTmovefr(key, arr, id){
    setTimeout(function(){
        if (document.getElementById('nnmsearchmover'+key)) document.getElementById('nnmsearchmover'+key).remove();
        var form = document.createElement('form');
@@ -235,7 +240,7 @@ function openTmovefr(key, id){
        form.method='POST';
        form.action='modcp.php';
        form.innerHTML = '<input type="hidden" name="sid" value="'+sid+'"><input type="hidden" name="move" value="Переместить"><input type="hidden" name="f" value="'+key+'">';
-       for (var i = SelectedTopics[key].length; i--;) form.innerHTML+='<input type="hidden" name="topic_id_list[]" value="'+SelectedTopics[key][i]+'">';
+       for (var i = arr.length; i--;) form.innerHTML+='<input type="hidden" name="topic_id_list[]" value="'+arr[i]+'">';
        document.body.appendChild(form);
        form.submit();
    }, id*2500);
