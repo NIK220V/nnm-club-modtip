@@ -1,21 +1,19 @@
 // ==UserScript==
 // @name         NNM ModMenu Tip
 // @namespace    none
-// @version      0.06
+// @version      0.07
 // @description  Пак полезных функций.
 // @author       NIK220V
 // @match        *://*.nnmclub.to/forum/viewforum.php?f=*
 // @match        *://*.nnmclub.tv/forum/viewforum.php?f=*
 // @match        *://*.nnm-club.lib/forum/viewforum.php?f=*
-// @match        *://*.nnm-club.me/forum/viewforum.php?f=*
-// @match        *://*.nnm-club.name/forum/viewforum.php?f=*
+// @match        *://*.nnm-club.ro/forum/viewforum.php?f=*
 // @match        *://*.nnm-club.i2p.onion/forum/viewforum.php?f=*
 // @match        *://*.nnmclub5toro7u65.onion/forum/viewforum.php?f=*
 // @match        *://*.nnmclub.to/forum/tracker.php*
 // @match        *://*.nnmclub.tv/forum/tracker.php*
 // @match        *://*.nnm-club.lib/forum/tracker.php*
-// @match        *://*.nnm-club.name/forum/tracker.php*
-// @match        *://*.nnm-club.me/forum/tracker.php*
+// @match        *://*.nnm-club.ro/forum/tracker.php*
 // @match        *://*.nnm-club.i2p.onion/forum/tracker.php*
 // @match        *://*.nnmclub5toro7u65.onion/forum/tracker.php*
 // @homepage     https://github.com/NIK220V/nnm-club-modtip
@@ -24,16 +22,14 @@
 // @grant        none
 // ==/UserScript==
 
-if (document.querySelector('.menutable').innerText.indexOf('Вход') >= 0 || (document.body.innerText.indexOf('Вы можете модерировать этот форум') < 0 && document.location.href.indexOf('tracker.php') < 0)) return;
+if (document.querySelector('.menutable').innerText.indexOf('Вход') >= 0 || (document.body.innerText.indexOf('Вы можете модерировать этот форум') < 0 && document.location.href.indexOf('tracker.php') < 0))
+    return;
 
-var defval = '<span class="gensmall"><a href="modcp.php?t=%topicid%&mode=delete&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_delete.gif" alt="Удалить тему" title="Удалить тему" border="0"></a>&nbsp;<a href="modcp.php?t=%topicid%&mode=move&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_move.gif" alt="Перенести тему" title="Перенести тему" border="0"></a>&nbsp;%closeoropen%<a href="modcp.php?t=%topicid%&mode=split&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_split.gif" alt="Разделить тему" title="Разделить тему" border="0"></a>&nbsp;<a href="merge.php?t=%topicid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_merge.gif" alt="Склейка тем" title="Склейка тем" border="0"></a>&nbsp;<a href="modcp.php?t=%topicid%&mode=unset_download&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_normal.gif" alt="Not Download" title="Not Download" border="0"></a>&nbsp;<a href="javascript:;" class="image_rename" onclick="rename(this.parentNode.parentNode.parentNode.parentNode);" title="Переименовать тему\n(С этой страницы)"></a></span>';
+var defval = '<span class="gensmall"><a href="modcp.php?t=%topicid%&mode=delete&sid=%sid%"><img src="//nnmclub.ch/forum/templates/smartBlue/images/topic_delete.gif" alt="Удалить тему" title="Удалить тему" border="0"></a>&nbsp;<a href="modcp.php?t=%topicid%&mode=move&sid=%sid%"><img src="//nnmclub.ch/forum/templates/smartBlue/images/topic_move.gif" alt="Перенести тему" title="Перенести тему" border="0"></a>&nbsp;%closeoropen%<a href="modcp.php?t=%topicid%&mode=split&sid=%sid%"><img src="//nnmclub.ch/forum/templates/smartBlue/images/topic_split.gif" alt="Разделить тему" title="Разделить тему" border="0"></a>&nbsp;<a href="merge.php?t=%topicid%"><img src="//nnmclub.ch/forum/templates/smartBlue/images/topic_merge.gif" alt="Склейка тем" title="Склейка тем" border="0"></a>&nbsp;<a href="modcp.php?t=%topicid%&mode=unset_download&sid=%sid%"><img src="//nnmclub.ch/forum/templates/smartBlue/images/topic_normal.gif" alt="Not Download" title="Not Download" border="0"></a>&nbsp;<a href="javascript:;" class="image_rename" onclick="rename(this.parentNode.parentNode.parentNode.parentNode);" title="Переименовать тему\n(С этой страницы)"></a></span>';
 
-var openval = '<a href="modcp.php?t=%topicid%&mode=unlock&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_unlock.gif" alt="Вновь открыть тему" title="Вновь открыть тему" border="0"></a>&nbsp;';
-var closeval = '<a href="modcp.php?t=%topicid%&mode=lock&sid=%sid%"><img src="//assets'+url()+'.nnm-club.ws/forum/templates/smartBlue/images/topic_lock.gif" alt="Закрыть тему" title="Закрыть тему" border="0"></a>&nbsp;';
+var openval = '<a href="modcp.php?t=%topicid%&mode=unlock&sid=%sid%"><img src="//nnmclub.ch/forum/templates/smartBlue/images/topic_unlock.gif" alt="Вновь открыть тему" title="Вновь открыть тему" border="0"></a>&nbsp;';
+var closeval = '<a href="modcp.php?t=%topicid%&mode=lock&sid=%sid%"><img src="//nnmclub.ch/forum/templates/smartBlue/images/topic_lock.gif" alt="Закрыть тему" title="Закрыть тему" border="0"></a>&nbsp;';
 
-function url(){
- return (document.location.href.indexOf('http:') < 0) ? '-ssl' : '';
-}
 
 window.SelectedTopics = {};
 
@@ -63,7 +59,7 @@ css.id = 'nnmtipcss';
 css.innerText = '.topictitle:hover .nnmtip{display:block} .topicpremod:hover .nnmtip{display:block} .nnmtip{display:none;background:#e8eff7;margin-left:15px;margin-top:5px;padding:6px;position:absolute;z-index:1000;width:155px;height:19px;border:1px solid #aec9e4;border-radius:15px;opacity:0.75}'+
     ".image_rename{display:inline-block;background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAASCAYAAAC5DOVpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDoAABSCAABFVgAADqXAAAXb9daH5AAAAKvSURBVHjalJRPSFRRFMZ/b3rk2ItpynGwf6YZmEVWFGNEJOUiEqGVmxb9XQRCuwJt1yqCcFEQuOifEIHuIyGpNJCC0lzUSOrozJg5ozUzzsyb994Mp4X5GnWM+uAs7j33+/jOOfdeRURYjmhCl8d9wzx68wl/ZN7eP7yjlGZfNS0NtWjFxcoKoogsibauPtl05a60dfXJ4MS0JNNpO/r9IcnPL+cq+c6udvZKYDrK/UunKFnvJGdZFELMyNHysIfKzaXcO9dgO7TFrnb2SiwW41HLGQzLImdZuFyugmKJRALTNLnw4OVSQRGh651faq51SDKdlng8LvF4XIBVY/FMKBSSmmsd0u8PiYjgAHjyapCbzfUFe2n9LjW/Ny6XC9M0cTqdXKzfT0fPOwAc0YQuA4EojfvK7R6Zpsm/4nSFxvPP30jpujhe+4M07tliJ03TxOPxrCBls9lVBau8GxgMzqFORGK43W5ylvXPjsbGxigqKrLXXm0tA1+nFnqWX9pyV6qq/lU4lU4DUOF146jwuglMR/kfLLoyDAOA8dkEmzdoOBr3lTMQiJLJZMhkMqsK5Ds0DAPDMNB1ncjMDP7IPEeqynBoxcXK2aN7eDY0hWEYhMNhwuEwiqLYAaxYA0SiUboCJq1NPlRVVVSAy/V7abjVzXFvHZ6SEgBGR0cLOtR1HYDZuTlGv//k6YcJJu6cXLhnAAd2lCmtTT4udg8xGQzahNUwGQzyaSxM25spbjcfo7x0o7LkbQLc6O6Xjt4hbtVvZVfZRjRNQ1u3zp5aKpUilUwyPJ2g/eMPWpt8XG+qW/nQF9H9fkTaX3wgPp/k0PYSdjv/DGXg5xrGZxPs9Lg4f+Igzb7qJX+aUuhzBHg7EpbnwwFefQmRy2ZZo6qcqNlOY20lx6q3KYU4vwYAJZiGjrIzMuIAAAAASUVORK5CYII=');width:19px;height:18px;}";
 document.head.appendChild(css);
-var topics = (document.location.href.indexOf('tracker.php') < 0) ?  document.querySelectorAll('h2[class~="topictitle"]') : ([].slice.call(document.querySelectorAll('a[class~="topictitle"]')).concat([].slice.call(document.querySelectorAll('a[class~="topicpremod"]'))));
+var topics = (document.location.href.indexOf('tracker.php') < 0) ? document.querySelectorAll('h2[class~="topictitle"]') : ([].slice.call(document.querySelectorAll('a[class~="topictitle"]')).concat([].slice.call(document.querySelectorAll('a[class~="topicpremod"]'))));
 for (var i = 0; i < topics.length; i++){
 topics[i].onmouseover = function(){showInfo(this);};
 }
@@ -164,7 +160,7 @@ window.trackerMove = function(){
     e.title = 'Перенос';
     e.innerHTML = '<b class="tbs-text">Move</b><span class="tbs-icon">&nbsp;&nbsp;</span>';
     p.appendChild(e);
-    document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><button id="nnmsearchselectbtn" onclick="selectAll();return false;" class="liteoption">Отметить всё</button></span><span class="genmed"><button id="nnmsearchdeselectbtn" onclick="deselectAll();return false;" class="liteoption">Снять выделение</button></span>';
+    document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><input type="button" class="liteoption tit-b" id="nnmsearchselectbtn" onclick="selectAll();return false;" value="Отметить всё"/></span><span class="genmed"><input type="button" class="liteoption tit-b" id="nnmsearchdeselectbtn" onclick="deselectAll();return false;" value="Снять выделение"/></span>';
     var c = document.querySelector('.forumline.tablesorter').children[1].children;
 for (var i = c.length;i--;){
     var td = document.createElement('td');
@@ -197,7 +193,7 @@ window.ToggleTopic = function(id, fid){
     if (Object.keys(SelectedTopics[fid]).length < 1) delete SelectedTopics[fid];
     if (Object.keys(SelectedTopics).length > 0){
         if (!document.getElementById('nnmsearchmoverbtn')){
-            document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><button id="nnmsearchmoverbtn" onclick="openTMove();this.parentNode.remove();return false;" class="liteoption">Открыть перенос</button></span>';
+            document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><input type="button" id="nnmsearchmoverbtn" onclick="openTMove();this.parentNode.remove();return false;" class="liteoption tit-b" value="Открыть перенос"/></span>';
         }
     } else {
         if (document.getElementById('nnmsearchmoverbtn')) document.getElementById('nnmsearchmoverbtn').remove();
@@ -232,7 +228,8 @@ window.deselectAll = function(){
 
 function openTmovefr(key, arr, id){
    setTimeout(function(){
-       if (document.getElementById('nnmsearchmover'+key)) document.getElementById('nnmsearchmover'+key).remove();
+       if (document.getElementById('nnmsearchmover'+key))
+           document.getElementById('nnmsearchmover'+key).remove();
        var form = document.createElement('form');
        form.id = 'nnmsearchmover'+key;
        form.style.display='none';
@@ -247,5 +244,5 @@ function openTmovefr(key, arr, id){
 }
 
 if (document.location.href.indexOf('tracker.php')>=0){
-    document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><button onclick="this.parentNode.remove();trackerMove();return false;" class="liteoption">Масс. перенос</button></span>';
+    document.querySelector('.forumline').children[0].children[2].children[0].innerHTML+='<span class="genmed"><input type="button" class="liteoption tit-b" onclick="this.parentNode.remove();trackerMove();return false;" value="Масс. перенос"/></span>';
 }
