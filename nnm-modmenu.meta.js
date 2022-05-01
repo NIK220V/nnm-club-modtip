@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NNM ModMenu Tip
 // @namespace    none
-// @version      0.07
+// @version      0.08
 // @description  Пак полезных функций.
 // @author       NIK220V
 // @match        *://*.nnmclub.to/forum/viewforum.php?f=*
